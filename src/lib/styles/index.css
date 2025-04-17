@@ -1,4 +1,23 @@
+:root {
+  color-scheme: light dark;
+  --bg-body: #111;
+  --bg-surface-0: #99999915;
+  --bg-surface-1: #99999925;
+  --c-accent:rgb(203, 168, 99);
+  --c-text: #eee;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --bg-body: #fafafa;
+    --c-accent:rgb(170, 136, 67);
+    --c-text: #222;
+  }
+}
+
 body {
+  background-color: var(--bg-body);
+  color: var(--c-text);
   font-family: "Bricolage Grotesque", sans-serif;
   font-optical-sizing: auto;
   font-weight: <weight>;

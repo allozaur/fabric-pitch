@@ -1,6 +1,6 @@
 <script lang="ts">
   import profilePicture from "$lib/assets/png/profile-pic.png?enhanced";
-  import { fly } from "svelte/transition";
+  import { fly, fade } from "svelte/transition";
   import { Button } from "$lib/components/index.js";
 
   let hasStarted = $state(false);
@@ -9,6 +9,7 @@
   let showName = $state(false);
   let showGreeting = $state(false);
   let showFinalImage = $state(false);
+  let showNextButton = $state(false);
 
   function gentleElasticOut(t: number) {
     const amplitude = 0.5;
@@ -26,8 +27,11 @@
     typewriterComplete = true;
     setTimeout(() => {
       showName = true;
-      // Show the final image at the same time as the name
       showFinalImage = true;
+
+      setTimeout(() => {
+        showNextButton = true;
+      }, 1500);
     }, 200);
   }
 
@@ -48,12 +52,8 @@
     peekState = "peekBottom";
 
     setTimeout(() => {
-      peekState = "peekRight";
-
-      setTimeout(() => {
-        peekState = "hidden";
-        showGreeting = true;
-      }, 1500);
+      peekState = "hidden";
+      showGreeting = true;
     }, 2000);
   }
 </script>
@@ -81,37 +81,34 @@
             >Hi, I'm
           </span>
           {#if showName}
-            <span class="name">Alek</span>
+            <strong class="name">Alek</strong>
           {/if}
         </h1>
       {/if}
     </div>
 
-    {#if peekState === "peekRight"}
-      <div
-        class="image-wrapper peek-right"
-        in:fly={{ x: 200, duration: 750 }}
-        out:fly={{ x: 200, duration: 250 }}
-      >
-        <enhanced:img src={profilePicture} height="200" class="rotate-270"
-        ></enhanced:img>
-      </div>
-    {:else if peekState === "peekBottom"}
+    {#if peekState === "peekBottom"}
       <div
         class="image-wrapper peek-bottom"
-        in:fly|local={{ y: 175, duration: 750, easing: (t) => t * t * t }}
-        out:fly|local={{ y: 175, duration: 250 }}
+        in:fly|local={{ y: 200, duration: 1000, easing: (t) => t * t * t }}
+        out:fly|local={{ y: 200, duration: 250 }}
       >
-        <enhanced:img src={profilePicture} height="200"></enhanced:img>
+        <enhanced:img src={profilePicture} height="250"></enhanced:img>
       </div>
     {/if}
 
     {#if showFinalImage}
       <div
         class="final-image"
-        in:fly={{ y: 150, duration: 500, easing: gentleElasticOut }}
+        in:fly={{ y: 150, duration: 750, easing: gentleElasticOut }}
       >
-        <enhanced:img src={profilePicture} height="200"></enhanced:img>
+        <enhanced:img src={profilePicture} height="250"></enhanced:img>
+      </div>
+    {/if}
+
+    {#if showNextButton}
+      <div class="next-button-container" in:fade={{ duration: 250 }}>
+        <Button href="/slide/1">Next</Button>
       </div>
     {/if}
   {/if}
@@ -181,7 +178,7 @@
   }
 
   .content-wrapper {
-    transition: none; /* Remove the previous transition */
+    transition: none;
     will-change: transform;
     z-index: 1;
   }
@@ -191,6 +188,7 @@
   }
 
   .heading {
+    font-weight: 400;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -203,7 +201,7 @@
     border-right: 2px solid transparent;
     white-space: nowrap;
     overflow: hidden;
-    animation: typing 1s steps(7, end) forwards;
+    animation: typing 0.75s steps(8, end) forwards;
   }
 
   .typewriter.completed {
@@ -212,8 +210,9 @@
 
   .name {
     display: inline-block;
-    color: rgb(62, 129, 255);
-    font-weight: bold;
+    font-weight: 700;
+    background: var(--bg-surface-1);
+    padding: 0.25rem 0.5rem;
     margin-left: 0.25rem;
     animation: nameBumpUp 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
   }
@@ -225,26 +224,14 @@
     will-change: transform;
   }
 
-  .peek-right {
-    position: absolute;
-    top: 50%;
-    right: -75px;
-    transform: translateY(-50%);
-    width: fit-content;
-  }
-
   .peek-bottom {
     position: absolute;
-    bottom: -100px;
+    bottom: -125px;
     left: 0;
     right: 0;
     margin-left: auto;
     margin-right: auto;
     width: fit-content;
-  }
-
-  .rotate-270 {
-    transform: rotate(270deg);
   }
 
   .final-image {
@@ -255,5 +242,12 @@
     margin-right: auto;
     width: fit-content;
     z-index: 0;
+  }
+
+  .next-button-container {
+    position: absolute;
+    bottom: 40px;
+    right: 40px;
+    z-index: 10;
   }
 </style>

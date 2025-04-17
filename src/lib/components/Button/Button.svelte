@@ -33,12 +33,13 @@
   .button {
     border: none;
     cursor: pointer;
-    font-size: 1rem;
-    color: white;
+    font-size: 1.25rem;
+    color: var(--c-text);
     font-weight: 600;
     letter-spacing: 0.01rem;
-    padding: 1rem;
-    background: linear-gradient(rgb(62, 129, 255) 0%, rgb(46, 119, 255) 100%);
+    padding: 1.25rem 2rem;
+    background: var(--bg-surface-0);
     border-radius: 0.5rem;
+    text-decoration: none;
   }
 </style>
