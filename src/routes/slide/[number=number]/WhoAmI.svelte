@@ -11,7 +11,7 @@
 
     let counter = 0;
     const targetValue = 10;
-    const incrementInterval = 200;
+    const incrementInterval = 100;
 
     setTimeout(() => {
       const interval = setInterval(() => {
@@ -29,7 +29,8 @@
 <main>
   {#if mounted}
     <p in:fly={{ y: 50, duration: 800, delay: 300 }}>
-      I am an UI/UX Designer & Software Engineer <br /> with <NumberFlow
+      I have been designing & coding <br /> web applications for the last
+      <NumberFlow
         value={yearsExperience}
         transformTiming={{
           duration: 500,
@@ -43,7 +44,7 @@
           duration: 500,
           easing: "ease-out",
         }}
-      /> years of experience in creating digital products
+      /> years
     </p>
   {/if}
 </main>

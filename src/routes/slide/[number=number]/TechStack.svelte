@@ -2,82 +2,46 @@
   import { onMount } from "svelte";
   import { fly } from "svelte/transition";
   import { SvgItem } from "$lib/components/index";
-  import NumberFlow from "@number-flow/svelte";
-
-  const assetsPath = "../../../lib/assets/svg/";
-
-  const assets = import.meta.glob("../../../lib/assets/svg/*.svg", {
-    query: "?raw",
-    import: "default",
-    eager: true,
-  });
 
   let mounted = $state(false);
-  let numberYears = $state(0);
 
   onMount(() => {
     mounted = true;
-
-    let counter = 0;
-    const targetValue = 4;
-    const incrementInterval = 250;
-
-    setTimeout(() => {
-      const interval = setInterval(() => {
-        counter++;
-        numberYears = counter;
-
-        if (counter >= targetValue) {
-          clearInterval(interval);
-        }
-      }, incrementInterval);
-    }, 250);
   });
 </script>
 
 <main>
   {#if mounted}
     <p in:fly={{ y: 50, duration: 800, delay: 300 }}>
-      I have worked with the following tech stack <br /> for the last <NumberFlow
-        value={numberYears}
-        transformTiming={{
-          duration: 500,
-          easing: "cubic-bezier(0.16, 1, 0.3, 1)",
-        }}
-        spinTiming={{
-          duration: 500,
-          easing: "cubic-bezier(0.16, 1, 0.3, 1)",
-        }}
-        opacityTiming={{
-          duration: 500,
-          easing: "ease-out",
-        }}
-      /> years
+      This is my current go-to tech stack for UI engineering
     </p>
   {/if}
 
   <div class="tech-stack">
     {#if mounted}
+      <div in:fly={{ y: 30, duration: 600, delay: 1000 }}>
+        <SvgItem name="svelte" --size="4rem" />
+      </div>
+      <div in:fly={{ y: 30, duration: 600, delay: 1250 }}>
+        <SvgItem name="vite" --size="4rem" />
+      </div>
+      <div in:fly={{ y: 30, duration: 600, delay: 1500 }}>
+        <SvgItem name="typescript" --size="4rem" />
+      </div>
+      <div in:fly={{ y: 30, duration: 600, delay: 1750 }}>
+        <SvgItem name="postcss" --size="4rem" />
+      </div>
       <div in:fly={{ y: 30, duration: 600, delay: 2000 }}>
-        <SvgItem {assets} {assetsPath} name="svelte" --size="3rem" />
+        <SvgItem name="storybook" --size="4rem" />
       </div>
-      <div in:fly={{ y: 30, duration: 600, delay: 2200 }}>
-        <SvgItem {assets} {assetsPath} name="vite" --size="3rem" />
+      <div in:fly={{ y: 30, duration: 600, delay: 2250 }}>
+        <SvgItem name="playwright" --size="4rem" />
       </div>
-      <div in:fly={{ y: 30, duration: 600, delay: 2400 }}>
-        <SvgItem {assets} {assetsPath} name="storybook" --size="3rem" />
+      <div in:fly={{ y: 30, duration: 600, delay: 2500 }}>
+        <SvgItem name="vitest" --size="4rem" />
       </div>
-      <div in:fly={{ y: 30, duration: 600, delay: 2600 }}>
-        <SvgItem {assets} {assetsPath} name="postcss" --size="3rem" />
-      </div>
-      <div in:fly={{ y: 30, duration: 600, delay: 2800 }}>
-        <SvgItem {assets} {assetsPath} name="typescript" --size="3rem" />
-      </div>
-      <div in:fly={{ y: 30, duration: 600, delay: 3000 }}>
-        <SvgItem {assets} {assetsPath} name="playwright" --size="3rem" />
-      </div>
-      <div in:fly={{ y: 30, duration: 600, delay: 3200 }}>
-        <SvgItem {assets} {assetsPath} name="figma" --size="3rem" />
+      <div in:fly={{ y: 30, duration: 600, delay: 2750 }}>
+        <SvgItem name="figma" --size="4rem" />
       </div>
     {/if}
   </div>
@@ -99,7 +63,7 @@
 
   .tech-stack {
     display: flex;
-    gap: 3rem;
+    gap: 4rem;
     padding-block: 2rem;
   }
 </style>

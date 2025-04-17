@@ -5,6 +5,10 @@
   import WhoAmI from "./WhoAmI.svelte";
   import TechStack from "./TechStack.svelte";
   import ILoveOpenSource from "./ILoveOpenSource.svelte";
+  import Brands from "./Brands.svelte";
+  import WhatILikeAboutFabric from "./WhatILikeAboutFabric.svelte";
+  import Teamwork from "./Teamwork.svelte";
+  import Final from "./Final.svelte";
 
   type PageComponents = {
     [key: string]: {
@@ -17,10 +21,22 @@
       component: WhoAmI,
     },
     "2": {
-      component: TechStack,
+      component: Brands,
     },
     "3": {
+      component: TechStack,
+    },
+    "4": {
       component: ILoveOpenSource,
+    },
+    "5": {
+      component: WhatILikeAboutFabric,
+    },
+    "6": {
+      component: Teamwork,
+    },
+    "7": {
+      component: Final,
     },
   };
 
@@ -65,7 +81,7 @@
     position: fixed;
     top: 0;
     height: 100vh;
-    width: 50%;
+    width: 33%;
     z-index: 10;
     cursor: pointer;
   }
@@ -84,7 +100,7 @@
     position: fixed;
     bottom: 2rem;
     right: 2rem;
-    font-size: 1.25rem;
+    font-size: 1.33rem;
     z-index: 20; /* Ensure it's above the nav areas */
   }
 </style>

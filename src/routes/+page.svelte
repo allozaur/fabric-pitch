@@ -1,18 +1,21 @@
 <script lang="ts">
   import profilePicture from "$lib/assets/png/profile-pic.png?enhanced";
-  import { fly, fade } from "svelte/transition";
+  import { fly } from "svelte/transition";
+  import { elasticOut } from "svelte/easing";
   import { Button } from "$lib/components/index.js";
+  import { onMount } from "svelte";
+  import { goto } from "$app/navigation";
 
+  let hasMounted = $state(false);
   let hasStarted = $state(false);
   let peekState = $state("hidden");
-  let typewriterComplete = $state(false);
-  let showName = $state(false);
   let showGreeting = $state(false);
   let showFinalImage = $state(false);
-  let showNextButton = $state(false);
+  let showName = $state(false);
+  let typewriterComplete = $state(false);
 
   function gentleElasticOut(t: number) {
-    const amplitude = 0.5;
+    const amplitude = 0.25;
     const period = 0.3;
 
     return (
@@ -23,16 +26,30 @@
     );
   }
 
+  function goToNextPage() {
+    if (showFinalImage) {
+      goto("/slide/1");
+    }
+  }
+
   function onTypewriterComplete() {
     typewriterComplete = true;
     setTimeout(() => {
       showName = true;
       showFinalImage = true;
+    }, 500);
+  }
 
-      setTimeout(() => {
-        showNextButton = true;
-      }, 1500);
-    }, 200);
+  function spin(node: HTMLElement, { duration }: { duration: number }) {
+    return {
+      duration,
+      css: (t: number, u: any) => {
+        const eased = elasticOut(t);
+        return `
+          transform: scale(${eased}) rotate(${eased * 720}deg);
+        `;
+      },
+    };
   }
 
   function startAnimation() {
@@ -53,9 +70,16 @@
 
     setTimeout(() => {
       peekState = "hidden";
-      showGreeting = true;
+
+      setTimeout(() => {
+        showGreeting = true;
+      }, 1000);
     }, 2000);
   }
+
+  onMount(() => {
+    hasMounted = true;
+  });
 </script>
 
 <svelte:head>
@@ -67,9 +91,12 @@
 </svelte:head>
 
 <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
-<main class:image-active={showFinalImage}>
-  {#if !hasStarted}
-    <Button onClick={startAnimation}>Start</Button>
+<!-- svelte-ignore a11y_click_events_have_key_events -->
+<main class:image-active={showFinalImage} onclick={goToNextPage}>
+  {#if hasMounted && !hasStarted}
+    <div class="start-button-wrapper" in:spin={{ duration: 3000 }}>
+      <Button onClick={startAnimation}>Start 🚀</Button>
+    </div>
   {:else}
     <div class="content-wrapper" class:slide-up={showFinalImage}>
       {#if showGreeting}
@@ -91,7 +118,7 @@
       <div
         class="image-wrapper peek-bottom"
         in:fly|local={{ y: 200, duration: 1000, easing: (t) => t * t * t }}
-        out:fly|local={{ y: 200, duration: 250 }}
+        out:fly|local={{ y: 200, duration: 1000 }}
       >
         <enhanced:img src={profilePicture} height="250"></enhanced:img>
       </div>
@@ -100,15 +127,9 @@
     {#if showFinalImage}
       <div
         class="final-image"
-        in:fly={{ y: 150, duration: 750, easing: gentleElasticOut }}
+        in:fly={{ y: 300, duration: 500, easing: gentleElasticOut }}
       >
         <enhanced:img src={profilePicture} height="250"></enhanced:img>
-      </div>
-    {/if}
-
-    {#if showNextButton}
-      <div class="next-button-container" in:fade={{ duration: 250 }}>
-        <Button href="/slide/1">Next</Button>
       </div>
     {/if}
   {/if}
@@ -149,17 +170,17 @@
       transform: translateY(20px);
       opacity: 0;
     }
-    20% {
+    10% {
       transform: translateY(-24px);
       opacity: 1;
     }
-    40% {
+    50% {
       transform: translateY(0px);
     }
-    60% {
+    70% {
       transform: translateY(-6px);
     }
-    80% {
+    85% {
       transform: translateY(-2px);
     }
     100% {
@@ -244,10 +265,8 @@
     z-index: 0;
   }
 
-  .next-button-container {
-    position: absolute;
-    bottom: 40px;
-    right: 40px;
-    z-index: 10;
+  .start-button-wrapper {
+    position: relative;
+    transform-origin: center center;
   }
 </style>

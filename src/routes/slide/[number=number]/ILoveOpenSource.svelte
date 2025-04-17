@@ -2,7 +2,6 @@
   import { onMount } from "svelte";
   import { fly } from "svelte/transition";
   import { SvgItem } from "$lib/components/index";
-  import NumberFlow from "@number-flow/svelte";
 
   const assetsPath = "../../../lib/assets/svg/";
 
@@ -13,7 +12,6 @@
   });
 
   let mounted = $state(false);
-  let yearsExperience = $state(0);
 
   onMount(() => {
     mounted = true;
@@ -25,7 +23,6 @@
     setTimeout(() => {
       const interval = setInterval(() => {
         counter++;
-        yearsExperience = counter;
 
         if (counter >= targetValue) {
           clearInterval(interval);
@@ -38,19 +35,27 @@
 <main>
   {#if mounted}
     <p in:fly={{ y: 50, duration: 800, delay: 300 }}>
-      I ❤️ open-source and have contributed to these incredible projects
+      I ❤️ open-source and have contributed <br /> to these incredible projects
     </p>
   {/if}
 
   <div class="tech-stack">
     {#if mounted}
-      <div in:fly={{ y: 30, duration: 600, delay: 1000 }}>
-        <SvgItem {assets} {assetsPath} name="svelte" --size="5rem" />
-      </div>
+      <a
+        href="https://github.com/sveltejs/kit/pull/12198"
+        target="_blank"
+        in:fly={{ y: 30, duration: 600, delay: 1000 }}
+      >
+        <SvgItem name="svelte" --size="5rem" />
+      </a>
 
-      <div in:fly={{ y: 30, duration: 600, delay: 1200 }}>
-        <SvgItem {assets} {assetsPath} name="storybook" --size="5rem" />
-      </div>
+      <a
+        href="https://github.com/storybookjs/storybook/pull/24889"
+        target="_blank"
+        in:fly={{ y: 30, duration: 600, delay: 1200 }}
+      >
+        <SvgItem name="storybook" --size="5rem" />
+      </a>
     {/if}
   </div>
 </main>
@@ -71,7 +76,7 @@
 
   .tech-stack {
     display: flex;
-    gap: 3rem;
+    gap: 4rem;
     padding-block: 2rem;
   }
 </style>
