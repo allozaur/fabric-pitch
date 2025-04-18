@@ -123,7 +123,7 @@
   {/if}
 
   {#if showFinalImage}
-    <div class="start-button-wrapper" in:spin={{ duration: 2000, delay: 1000 }}>
+    <div class="start-button-wrapper" in:spin={{ duration: 2000, delay: 500 }}>
       <Button href="/slide/1">Start 🚀</Button>
     </div>
   {/if}
