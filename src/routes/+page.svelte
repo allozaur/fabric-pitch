@@ -6,8 +6,6 @@
   import { onMount } from "svelte";
   import { goto } from "$app/navigation";
 
-  let hasMounted = $state(false);
-  let hasStarted = $state(false);
   let peekState = $state("hidden");
   let showGreeting = $state(false);
   let showFinalImage = $state(false);
@@ -40,9 +38,13 @@
     }, 500);
   }
 
-  function spin(node: HTMLElement, { duration }: { duration: number }) {
+  function spin(
+    node: HTMLElement,
+    { duration, delay }: { duration: number; delay: number }
+  ) {
     return {
       duration,
+      delay,
       css: (t: number, u: any) => {
         const eased = elasticOut(t);
         return `
@@ -50,19 +52,6 @@
         `;
       },
     };
-  }
-
-  function startAnimation() {
-    if (!hasStarted) {
-      hasStarted = true;
-
-      setTimeout(() => {
-        peekState = "hidden";
-        setTimeout(() => {
-          startPeekSequence();
-        }, 100);
-      }, 0);
-    }
   }
 
   function startPeekSequence() {
@@ -73,12 +62,12 @@
 
       setTimeout(() => {
         showGreeting = true;
-      }, 1000);
+      }, 2000);
     }, 2000);
   }
 
   onMount(() => {
-    hasMounted = true;
+    startPeekSequence();
   });
 </script>
 
@@ -93,45 +82,50 @@
 <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
 <!-- svelte-ignore a11y_click_events_have_key_events -->
 <main class:image-active={showFinalImage} onclick={goToNextPage}>
-  {#if hasMounted && !hasStarted}
-    <div class="start-button-wrapper" in:spin={{ duration: 3000 }}>
-      <Button onClick={startAnimation}>Start 🚀</Button>
-    </div>
-  {:else}
+  {#if showGreeting}
     <div class="content-wrapper" class:slide-up={showFinalImage}>
-      {#if showGreeting}
-        <h1 class="heading">
-          <span
-            class="typewriter"
-            class:completed={typewriterComplete}
-            onanimationend={onTypewriterComplete}
-            >Hi, I'm
-          </span>
-          {#if showName}
-            <strong class="name">Alek</strong>
-          {/if}
-        </h1>
-      {/if}
+      <h1 class="heading">
+        <span
+          class="typewriter"
+          class:completed={typewriterComplete}
+          onanimationend={onTypewriterComplete}
+          >Hi, I'm
+        </span>
+        {#if showName}
+          <strong class="name">Alek</strong>
+        {/if}
+      </h1>
     </div>
+  {/if}
 
-    {#if peekState === "peekBottom"}
-      <div
-        class="image-wrapper peek-bottom"
-        in:fly|local={{ y: 200, duration: 1000, easing: (t) => t * t * t }}
-        out:fly|local={{ y: 200, duration: 1000 }}
-      >
-        <enhanced:img src={profilePicture} height="250"></enhanced:img>
-      </div>
-    {/if}
+  {#if peekState === "peekBottom"}
+    <div
+      class="image-wrapper peek-bottom"
+      in:fly|local={{
+        y: 200,
+        delay: 500,
+        duration: 1500,
+        easing: (t) => t * t * t,
+      }}
+      out:fly|local={{ y: 200, delay: 1000, duration: 1000 }}
+    >
+      <enhanced:img src={profilePicture} height="250"></enhanced:img>
+    </div>
+  {/if}
 
-    {#if showFinalImage}
-      <div
-        class="final-image"
-        in:fly={{ y: 300, duration: 500, easing: gentleElasticOut }}
-      >
-        <enhanced:img src={profilePicture} height="250"></enhanced:img>
-      </div>
-    {/if}
+  {#if showFinalImage}
+    <div
+      class="final-image"
+      in:fly={{ y: 300, duration: 500, easing: gentleElasticOut }}
+    >
+      <enhanced:img src={profilePicture} height="250"></enhanced:img>
+    </div>
+  {/if}
+
+  {#if showFinalImage}
+    <div class="start-button-wrapper" in:spin={{ duration: 2000, delay: 1000 }}>
+      <Button href="/slide/1">Start 🚀</Button>
+    </div>
   {/if}
 </main>
 
@@ -202,6 +196,11 @@
     transition: none;
     will-change: transform;
     z-index: 1;
+    margin-bottom: 1rem;
+
+    h1 {
+      margin: 0;
+    }
   }
 
   .content-wrapper.slide-up {
@@ -266,7 +265,9 @@
   }
 
   .start-button-wrapper {
+    display: flex;
     position: relative;
     transform-origin: center center;
+    margin-top: 3rem;
   }
 </style>
